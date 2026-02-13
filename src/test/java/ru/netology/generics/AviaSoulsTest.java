@@ -7,106 +7,138 @@ public class AviaSoulsTest {
 
     @Test
     public void shouldSortPrice() {
+        AviaSouls manager = new AviaSouls();
         Ticket ticket1 = new Ticket("Москва", "Краснодар", 5000, 10, 12);
         Ticket ticket2 = new Ticket("Москва", "Санкт-Петербург", 8000, 10, 11);
-        Ticket ticket3 = new Ticket("Краснодар", "Волгоград", 5000, 8, 10);
+        Ticket ticket3 = new Ticket("Москва", "Краснодар", 5000, 8, 10);
         Ticket ticket4 = new Ticket("Самара", "Сочи", 18000, 5, 10);
-        Ticket ticket5 = new Ticket("Сочи", "Краснодар", 3000, 2, 4);
+        Ticket ticket5 = new Ticket("Москва", "Краснодар", 3000, 2, 4);
 
-        int expected1 = -1;
-        int actual1 = ticket1.compareTo(ticket4);
+        manager.add(ticket1);
+        manager.add(ticket2);
+        manager.add(ticket3);
+        manager.add(ticket4);
+        manager.add(ticket5);
 
-        Assertions.assertEquals(expected1, actual1);
+        Ticket[] expected = {ticket5, ticket1, ticket3};
+        Ticket[] actual = manager.search("Москва", "Краснодар");
 
-        int expected2 = 1;
-        int actual2 = ticket4.compareTo(ticket5);
-
-        Assertions.assertEquals(expected2, actual2);
-
-        int expected3 = 0;
-        int actual3 = ticket3.compareTo(ticket1);
-
-        Assertions.assertEquals(expected3, actual3);
-
-        int expected4 = 1;
-        int actual4 = ticket2.compareTo(ticket3);
-        Assertions.assertEquals(expected4, actual4);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
-    public void shouldSearchSort() {
+    public void shouldSearchNull() {
         AviaSouls manager = new AviaSouls();
 
-        manager.add(new Ticket("Москва", "Краснодар", 5000, 10, 12));
-        manager.add(new Ticket("Москва", "Краснодар", 5000, 8, 10));
-        manager.add(new Ticket("Москва", "Краснодар", 3000, 2, 4));
-        manager.add(new Ticket("Москва", "Краснодар", 18000, 5, 10));
-        manager.add(new Ticket("Москва", "Краснодар", 8000, 10, 11));
+        Ticket ticket1 = new Ticket("Москва", "Краснодар", 5000, 10, 12);
+        Ticket ticket2 = new Ticket("Москва", "Санкт-Петербург", 8000, 10, 11);
+        Ticket ticket3 = new Ticket("Москва", "Краснодар", 5000, 8, 10);
+        Ticket ticket4 = new Ticket("Самара", "Сочи", 18000, 5, 10);
+        Ticket ticket5 = new Ticket("Москва", "Краснодар", 3000, 2, 4);
 
-        Ticket[] result = manager.search("Москва", "Краснодар");
+        manager.add(ticket1);
+        manager.add(ticket2);
+        manager.add(ticket3);
+        manager.add(ticket4);
+        manager.add(ticket5);
 
-        int expected1 = 3000;
-        int actual1 = result[0].getPrice();
+        Ticket[] expected = { };
+        Ticket[] actual = manager.search("Москва", "Екатеринбург");
 
-        Assertions.assertEquals(expected1, actual1);
+        Assertions.assertArrayEquals(expected, actual);
+    }
 
-        int expected2 = 5000;
-        int actual2 = result[1].getPrice();
+    @Test
+    public void shouldSearchOneTicket() {
+        AviaSouls manager = new AviaSouls();
 
-        Assertions.assertEquals(expected2, actual2);
+        Ticket ticket1 = new Ticket("Москва", "Краснодар", 5000, 10, 12);
+        Ticket ticket2 = new Ticket("Москва", "Санкт-Петербург", 8000, 10, 11);
+        Ticket ticket3 = new Ticket("Москва", "Краснодар", 5000, 8, 10);
+        Ticket ticket4 = new Ticket("Самара", "Сочи", 18000, 5, 10);
+        Ticket ticket5 = new Ticket("Москва", "Краснодар", 3000, 2, 4);
 
-        int expected3 = 5000;
-        int actual3 = result[2].getPrice();
+        manager.add(ticket1);
+        manager.add(ticket2);
+        manager.add(ticket3);
+        manager.add(ticket4);
+        manager.add(ticket5);
 
-        Assertions.assertEquals(expected3, actual3);
+        Ticket[] expected = {ticket4};
+        Ticket[] actual = manager.search("Самара", "Сочи");
 
-        int expected4 = 8000;
-        int actual4 = result[3].getPrice();
+        Assertions.assertArrayEquals(expected, actual);
+    }
 
-        Assertions.assertEquals(expected4, actual4);
+    @Test
+    public void shouldSearchSortByTimeOne() {
+        AviaSouls manager = new AviaSouls();
 
-        int expected5 = 18000;
-        int actual5 = result[4].getPrice();
+        Ticket ticket1 = new Ticket("Москва", "Краснодар", 5000, 10, 12);
+        Ticket ticket2 = new Ticket("Москва", "Санкт-Петербург", 8000, 10, 11);
+        Ticket ticket3 = new Ticket("Москва", "Краснодар", 5000, 8, 10);
+        Ticket ticket4 = new Ticket("Самара", "Сочи", 18000, 5, 10);
+        Ticket ticket5 = new Ticket("Москва", "Краснодар", 3000, 2, 8);
 
-        Assertions.assertEquals(expected5, actual5);
+        manager.add(ticket1);
+        manager.add(ticket2);
+        manager.add(ticket3);
+        manager.add(ticket4);
+        manager.add(ticket5);
+
+        TicketTimeComparator comparator = new TicketTimeComparator();
+
+        Ticket[] expected = {ticket4};
+        Ticket[] actual = manager.searchAndSortBy("Самара", "Сочи", comparator);
+
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
     public void shouldSearchSortByTime() {
         AviaSouls manager = new AviaSouls();
 
-        manager.add(new Ticket("Москва", "Краснодар", 5000, 10, 12));
-        manager.add(new Ticket("Москва", "Краснодар", 5000, 8, 10));
-        manager.add(new Ticket("Москва", "Краснодар", 3000, 2, 4));
-        manager.add(new Ticket("Москва", "Краснодар", 18000, 5, 10));
-        manager.add(new Ticket("Москва", "Краснодар", 8000, 10, 11));
+        Ticket ticket1 = new Ticket("Москва", "Краснодар", 5000, 10, 12);
+        Ticket ticket2 = new Ticket("Москва", "Санкт-Петербург", 8000, 10, 11);
+        Ticket ticket3 = new Ticket("Москва", "Краснодар", 5000, 8, 10);
+        Ticket ticket4 = new Ticket("Самара", "Сочи", 18000, 5, 10);
+        Ticket ticket5 = new Ticket("Москва", "Краснодар", 3000, 2, 8);
+
+        manager.add(ticket1);
+        manager.add(ticket2);
+        manager.add(ticket3);
+        manager.add(ticket4);
+        manager.add(ticket5);
 
         TicketTimeComparator comparator = new TicketTimeComparator();
-        Ticket[] result = manager.searchAndSortBy("Москва", "Краснодар", comparator);
 
-        int expected1 = 1;
-        int actual1 = result[0].getTimeTo() - result[0].getTimeFrom();
+        Ticket[] expected = {ticket1, ticket3, ticket5};
+        Ticket[] actual = manager.searchAndSortBy("Москва", "Краснодар", comparator);
 
-        Assertions.assertEquals(expected1, actual1);
+        Assertions.assertArrayEquals(expected, actual);
+    }
 
-        int expected2 = 2;
-        int actual2 = result[1].getTimeTo() - result[1].getTimeFrom();
+    @Test
+    public void shouldSearchSortByTimeNull() {
+        AviaSouls manager = new AviaSouls();
 
-        Assertions.assertEquals(expected2, actual2);
+        Ticket ticket1 = new Ticket("Москва", "Краснодар", 5000, 10, 12);
+        Ticket ticket2 = new Ticket("Москва", "Санкт-Петербург", 8000, 10, 11);
+        Ticket ticket3 = new Ticket("Москва", "Краснодар", 5000, 8, 10);
+        Ticket ticket4 = new Ticket("Самара", "Сочи", 18000, 5, 10);
+        Ticket ticket5 = new Ticket("Москва", "Краснодар", 3000, 2, 8);
 
-        int expected3 = 2;
-        int actual3 = result[2].getTimeTo() - result[2].getTimeFrom();
+        manager.add(ticket1);
+        manager.add(ticket2);
+        manager.add(ticket3);
+        manager.add(ticket4);
+        manager.add(ticket5);
 
-        Assertions.assertEquals(expected3, actual3);
+        TicketTimeComparator comparator = new TicketTimeComparator();
 
-        int expected4 = 2;
-        int actual4 = result[3].getTimeTo() - result[3].getTimeFrom();
+        Ticket[] expected = { };
+        Ticket[] actual = manager.searchAndSortBy("Самара", "Екатеринбург", comparator);
 
-        Assertions.assertEquals(expected4, actual4);
-
-        int expected5 = 5;
-        int actual5 = result[4].getTimeTo() - result[4].getTimeFrom();
-
-        Assertions.assertEquals(expected5, actual5);
+        Assertions.assertArrayEquals(expected, actual);
     }
 }
